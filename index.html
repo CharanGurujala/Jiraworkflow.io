@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jira Status Guide — Charan's Team</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple-light: #EEEDFE; --purple: #7F77DD; --purple-dark: #3C3489;
+    --teal-light: #E1F5EE; --teal: #1D9E75; --teal-dark: #085041;
+    --blue-light: #E6F1FB; --blue: #378ADD; --blue-dark: #0C447C;
+    --amber-light: #FAEEDA; --amber: #BA7517; --amber-dark: #633806;
+    --green-light: #EAF3DE; --green: #639922; --green-dark: #27500A;
+    --red-light: #FCEBEB; --red: #E24B4A; --red-dark: #791F1F;
+    --coral-light: #FAECE7; --coral: #D85A30; --coral-dark: #712B13;
+    --gray-light: #F1EFE8; --gray: #888780; --gray-dark: #444441;
+    --bg: #0d0d14;
+    --card-bg: rgba(255,255,255,0.06);
+    --card-border: rgba(255,255,255,0.1);
+    --text-primary: #f0eee8;
+    --text-secondary: #a09e98;
+    --text-hint: #6a6862;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── ANIMATED BACKGROUND ── */
+  .bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .bg-canvas canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Flowing status trail orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.18;
+    animation: drift linear infinite;
+  }
+  .orb-1 { width: 420px; height: 420px; background: #7F77DD; top: -10%; left: -5%; animation-duration: 22s; animation-delay: 0s; }
+  .orb-2 { width: 320px; height: 320px; background: #1D9E75; top: 30%; right: -8%; animation-duration: 28s; animation-delay: -8s; }
+  .orb-3 { width: 500px; height: 500px; background: #378ADD; bottom: -15%; left: 20%; animation-duration: 32s; animation-delay: -15s; }
+  .orb-4 { width: 260px; height: 260px; background: #D85A30; top: 60%; left: 50%; animation-duration: 18s; animation-delay: -5s; }
+  .orb-5 { width: 350px; height: 350px; background: #E24B4A; top: 10%; right: 30%; animation-duration: 25s; animation-delay: -12s; }
+
+  @keyframes drift {
+    0%   { transform: translate(0,0) scale(1); }
+    25%  { transform: translate(40px,-60px) scale(1.05); }
+    50%  { transform: translate(-30px,80px) scale(0.95); }
+    75%  { transform: translate(60px,30px) scale(1.08); }
+    100% { transform: translate(0,0) scale(1); }
+  }
+
+  /* Floating mini status pills in background */
+  .float-pill {
+    position: absolute;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    opacity: 0;
+    animation: floatUp linear infinite;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  @keyframes floatUp {
+    0%   { opacity: 0; transform: translateY(40px) scale(0.85); }
+    10%  { opacity: 0.22; }
+    80%  { opacity: 0.18; }
+    100% { opacity: 0; transform: translateY(-120px) scale(1.05); }
+  }
+
+  /* Grid lines overlay */
+  .grid-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  /* ── LAYOUT ── */
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 72px 0 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(127,119,221,0.15);
+    border: 0.5px solid rgba(127,119,221,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    color: #a9a4f0;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    text-transform: uppercase;
+    animation: fadeDown 0.6s ease both;
+  }
+  .hero-tag span.dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #7F77DD;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(38px, 6vw, 72px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    animation: fadeDown 0.7s ease 0.1s both;
+  }
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #7F77DD 0%, #1D9E75 50%, #378ADD 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 560px;
+    line-height: 1.65;
+    animation: fadeDown 0.7s ease 0.2s both;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SEARCH BAR ── */
+  .search-wrap {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    margin-top: 4px;
+    animation: fadeDown 0.7s ease 0.3s both;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-hint);
+    width: 16px; height: 16px;
+  }
+  .search-wrap input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 0.5px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 11px 16px 11px 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .search-wrap input::placeholder { color: var(--text-hint); }
+  .search-wrap input:focus {
+    border-color: rgba(127,119,221,0.5);
+    background: rgba(255,255,255,0.09);
+  }
+
+  /* ── PHASE SECTION ── */
+  .phase-section {
+    margin-bottom: 36px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .phase-section:nth-child(1) { animation-delay: 0.1s; }
+  .phase-section:nth-child(2) { animation-delay: 0.15s; }
+  .phase-section:nth-child(3) { animation-delay: 0.2s; }
+  .phase-section:nth-child(4) { animation-delay: 0.25s; }
+  .phase-section:nth-child(5) { animation-delay: 0.3s; }
+  .phase-section:nth-child(6) { animation-delay: 0.35s; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .phase-number {
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px; font-weight: 700;
+  }
+  .phase-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .phase-line {
+    flex: 1;
+    height: 0.5px;
+    background: rgba(255,255,255,0.08);
+  }
+  .phase-count {
+    font-size: 11px;
+    color: var(--text-hint);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── STATUS GRID ── */
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+  }
+
+  /* ── STATUS CARD ── */
+  .status-card {
+    background: var(--card-bg);
+    border: 0.5px solid var(--card-border);
+    border-radius: 16px;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .status-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border-radius: 16px 16px 0 0;
+  }
+  .status-card:hover {
+    transform: translateY(-3px);
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(255,255,255,0.18);
+  }
+  .status-card:hover::before { opacity: 1; }
+  .status-card.active {
+    border-width: 1.5px;
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-3px);
+  }
+  .status-card.active::before { opacity: 1; }
+
+  .card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+  }
+  .card-badge .badge-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .card-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  /* hidden for filter */
+  .status-card.hidden { display: none; }
+
+  /* ── DETAIL PANEL ── */
+  .detail-panel {
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin: 32px 0;
+    min-height: 160px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .detail-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 20px 20px 0 0;
+  }
+  .detail-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 120px;
+    color: var(--text-hint);
+    font-size: 13px;
+  }
+  .detail-empty .arrow-icon {
+    font-size: 28px;
+    opacity: 0.3;
+  }
+
+  .detail-content { animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  .detail-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .detail-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .detail-owner {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.08);
+    border: 0.5px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .detail-owner svg { width: 13px; height: 13px; }
+
+  .detail-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    max-width: 680px;
+  }
+
+  .flows-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-hint);
+    margin-bottom: 10px;
+  }
+  .flows-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .flow-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.07);
+    border: 0.5px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    transition: background 0.15s;
+    cursor: default;
+  }
+  .flow-chip svg { width: 12px; height: 12px; opacity: 0.6; }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.5s ease 0.05s both;
+  }
+  .stat-card {
+    background: var(--card-bg);
+    border: 0.5px solid var(--card-border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-hint);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 40px 0 0;
+    font-size: 12px;
+    color: var(--text-hint);
+    border-top: 0.5px solid rgba(255,255,255,0.06);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .hero { padding: 48px 0 36px; }
+    .detail-panel { padding: 20px; }
+    .detail-header { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-canvas">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+  <div class="orb orb-5"></div>
+  <div id="float-pills"></div>
+</div>
+<div class="grid-overlay"></div>
+
+<div class="wrapper">
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-tag"><span class="dot"></span> Jira workflow reference</div>
+    <h1>Every status,<br><em>explained.</em></h1>
+    <p>From the first grooming session to production release — understand what each Jira status means, who owns it, and where the story goes next.</p>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input type="text" id="search-input" placeholder="Search a status… e.g. Blocked, To Do, Accepted" oninput="filterStatuses(this.value)">
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-num" style="color:#7F77DD">13</span>
+      <span class="stat-label">Total statuses</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" style="color:#1D9E75">6</span>
+      <span class="stat-label">Workflow phases</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" style="color:#E24B4A">3</span>
+      <span class="stat-label">Special states</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" style="color:#BA7517">2</span>
+      <span class="stat-label">Closure paths</span>
+    </div>
+  </div>
+
+  <!-- Detail panel -->
+  <div class="detail-panel" id="detail-panel">
+    <div class="detail-empty" id="detail-empty">
+      <div class="arrow-icon">↑</div>
+      <span>Click any status card to see its full definition</span>
+    </div>
+    <div id="detail-content" style="display:none"></div>
+  </div>
+
+  <!-- Phases -->
+  <main id="phases-container"></main>
+
+  <footer class="footer">
+    <p>Jira Status Reference Guide &nbsp;·&nbsp; Evernorth Health Services</p>
+    <p style="margin-top:6px">Built for Scrum Masters &amp; Agile Teams</p>
+  </footer>
+
+</div>
+
+<script>
+const phases = [
+  {
+    id: 'grooming', label: 'Grooming', num: '01',
+    accent: '#7F77DD', accentLight: 'rgba(127,119,221,0.18)',
+    statuses: [
+      { id:'rfg', title:'Ready for grooming', short:'Story awaiting PM clarity from business', badge:'Pre-grooming', owner:'Product Manager',
+        desc:'The user story or epic has been raised by the business but lacks enough clarity to proceed. The PM is responsible for scheduling a grooming session to extract the full definition, goals, and context from stakeholders.',
+        flows:['In grooming'] },
+      { id:'ing', title:'In grooming', short:'Active discussion between PM & business', badge:'Active', owner:'PM + Business',
+        desc:'The grooming session is actively in progress. The PM is working with business stakeholders to define scope, goals, acceptance criteria at a high level, and any constraints. The story is not ready for developers yet.',
+        flows:['Grooming complete', 'Blocked / On hold'] },
+      { id:'gc', title:'Grooming complete', short:'Story definition signed off by PM', badge:'Done', owner:'Product Manager',
+        desc:'The business has provided a clear definition of the user story or epic. The PM has validated it and the story is now ready to be handed over to developers for technical refinement.',
+        flows:['Ready for refinement'] },
+    ]
+  },
+  {
+    id: 'refinement', label: 'Refinement', num: '02',
+    accent: '#1D9E75', accentLight: 'rgba(29,158,117,0.18)',
+    statuses: [
+      { id:'rfr', title:'Ready for refinement', short:'Story queued for dev team review', badge:'Queued', owner:'Scrum Master + Dev Team',
+        desc:'The story is in the backlog and scheduled for a refinement session. The dev team will review scope, ask clarifying questions, and break the story down into technical tasks with clear acceptance criteria.',
+        flows:['Refinement complete', 'Blocked / On hold'] },
+      { id:'rc', title:'Refinement complete', short:'Dev team has clear acceptance criteria', badge:'Sprint-ready', owner:'Dev Team',
+        desc:'Developers have a full understanding of the acceptance criteria, technical approach, and story points. The story is sprint-ready and can be picked up by any available developer.',
+        flows:['To do'] },
+    ]
+  },
+  {
+    id: 'development', label: 'Development', num: '03',
+    accent: '#378ADD', accentLight: 'rgba(55,138,221,0.18)',
+    statuses: [
+      { id:'td', title:'To do', short:'Assigned, not yet started', badge:'Pending', owner:'Developer',
+        desc:'The story has been assigned to a developer within an active sprint but work has not yet begun. It sits in the sprint backlog waiting for the developer to start.',
+        flows:['In progress'] },
+      { id:'ip', title:'In progress', short:'Developer actively building', badge:'Active', owner:'Developer',
+        desc:'The developer has actively started coding the story. Daily standups track progress. The Scrum Master monitors for blockers or impediments that could delay completion.',
+        flows:['Development complete', 'Blocked / On hold', 'Dependency'] },
+      { id:'dc', title:'Development complete', short:'Code done, ready for QA', badge:'Hand-off', owner:'Developer → QA',
+        desc:'Code has been written, reviewed, and merged. The story is ready for QA testing. The developer should notify the QA team and provide any necessary test data or environment details.',
+        flows:['Testing in progress'] },
+    ]
+  },
+  {
+    id: 'qa', label: 'QA', num: '04',
+    accent: '#BA7517', accentLight: 'rgba(186,117,23,0.18)',
+    statuses: [
+      { id:'tip', title:'Testing in progress', short:'QA actively testing the story', badge:'Testing', owner:'QA Engineer',
+        desc:'QA is actively executing test cases against the story. Any defects found are raised and the story may cycle back to In Progress if a bug is logged. Testing covers functional, regression, and UAT as applicable.',
+        flows:['Ready to accept', 'In progress (bug found)'] },
+      { id:'rta', title:'Ready to accept', short:'QA sign-off given, awaiting release', badge:'Signed-off', owner:'PM / Product Owner',
+        desc:'QA has completed testing and given sign-off. The story is functionally complete. The Product Owner or PM makes the final decision on whether this goes to a release or is simply closed out.',
+        flows:['Accepted (if released)', 'Done (if not released)'] },
+    ]
+  },
+  {
+    id: 'closure', label: 'Closure', num: '05',
+    accent: '#639922', accentLight: 'rgba(99,153,34,0.18)',
+    statuses: [
+      { id:'acc', title:'Accepted', short:'Deployed to production', badge:'Released', owner:'Product Manager / PO',
+        desc:'The story has been deployed to the production environment and verified. The Product Owner formally accepts it as delivered. This is the final successful state for stories that go through a release.',
+        flows:['Closed'] },
+      { id:'done', title:'Done', short:'Closed without release to prod', badge:'Closed', owner:'Scrum Master',
+        desc:'The story has been completed and closed without going to a production release — for example, internal improvements, cancelled features post-QA, or stories delivered via a different deployment path.',
+        flows:['Closed'] },
+    ]
+  },
+  {
+    id: 'special', label: 'Special states', num: '⚡',
+    accent: '#E24B4A', accentLight: 'rgba(226,75,74,0.18)',
+    statuses: [
+      { id:'blk', title:'Blocked / On hold', short:'Progress stopped — needs resolution', badge:'Impediment', owner:'Scrum Master (to resolve)',
+        desc:'Progress on the story has stopped due to an impediment. This could be a technical blocker, a missing decision, a resource constraint, or an environment issue. The Scrum Master owns impediment removal. Can occur at any stage.',
+        flows:['Returns to previous status once resolved'] },
+      { id:'dep', title:'Dependency', short:'Waiting on another team or resource', badge:'Waiting', owner:'Scrum Master + PM',
+        desc:'The story cannot progress because it is waiting on another team, service, or resource outside the current team\'s control. The dependency must be tracked and communicated. Can occur at any stage.',
+        flows:['Returns to active status once cleared'] },
+      { id:'can', title:'Cancelled', short:'Story will not be pursued', badge:'Terminated', owner:'Product Manager',
+        desc:'The story will not be delivered. This can happen at any point — during grooming, refinement, development, or even after QA — if priorities shift, scope changes, or the business no longer needs the outcome.',
+        flows:['No further transitions'] },
+    ]
+  },
+];
+
+let activeId = null;
+
+function buildPhases() {
+  const container = document.getElementById('phases-container');
+  phases.forEach(phase => {
+    const sec = document.createElement('section');
+    sec.className = 'phase-section';
+    sec.dataset.phase = phase.id;
+
+    sec.innerHTML = `
+      <div class="phase-header">
+        <div class="phase-number" style="background:${phase.accentLight};color:${phase.accent}">${phase.num}</div>
+        <span class="phase-title" style="color:${phase.accent}">${phase.label}</span>
+        <div class="phase-line"></div>
+        <span class="phase-count">${phase.statuses.length} status${phase.statuses.length>1?'es':''}</span>
+      </div>
+      <div class="status-grid" id="grid-${phase.id}">
+        ${phase.statuses.map(s => buildCard(s, phase)).join('')}
+      </div>
+    `;
+    container.appendChild(sec);
+  });
+}
+
+function buildCard(s, phase) {
+  return `
+    <div class="status-card" id="card-${s.id}" data-id="${s.id}" data-title="${s.title.toLowerCase()}" onclick="showDetail('${s.id}')"
+      style="--card-accent:${phase.accent}">
+      <div class="card-badge" style="background:${phase.accentLight};color:${phase.accent}">
+        <span class="badge-dot" style="background:${phase.accent}"></span>
+        ${s.badge}
+      </div>
+      <div class="card-title">${s.title}</div>
+      <div class="card-desc">${s.short}</div>
+    </div>
+  `;
+}
+
+function showDetail(id) {
+  const allStatuses = phases.flatMap(p => p.statuses.map(s => ({...s, phase: p})));
+  const s = allStatuses.find(x => x.id === id);
+  if (!s) return;
+
+  // Toggle
+  if (activeId === id) {
+    activeId = null;
+    document.querySelectorAll('.status-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('detail-content').style.display = 'none';
+    document.getElementById('detail-empty').style.display = 'flex';
+    return;
+  }
+
+  activeId = id;
+  document.querySelectorAll('.status-card').forEach(c => {
+    c.classList.remove('active');
+    c.style.removeProperty('border-color');
+  });
+  const card = document.getElementById('card-'+id);
+  if (card) {
+    card.classList.add('active');
+    card.style.borderColor = s.phase.accent;
+  }
+
+  const panel = document.getElementById('detail-panel');
+  panel.style.setProperty('--panel-accent', s.phase.accent);
+  panel.style.borderColor = s.phase.accent.replace(')', ',0.35)').replace('rgb', 'rgba');
+  panel.querySelector('::before');
+  panel.style.cssText += `border-color: rgba(255,255,255,0.1);`;
+
+  document.getElementById('detail-empty').style.display = 'none';
+  const content = document.getElementById('detail-content');
+  content.style.display = 'block';
+  content.innerHTML = `
+    <div class="detail-content">
+      <div class="detail-header">
+        <div class="detail-title" style="color:${s.phase.accent}">${s.title}</div>
+        <div class="detail-owner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          ${s.owner}
+        </div>
+      </div>
+      <p class="detail-desc">${s.desc}</p>
+      <div class="flows-label">Flows to</div>
+      <div class="flows-list">
+        ${s.flows.map(f => `
+          <span class="flow-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            ${f}
+          </span>`).join('')}
+      </div>
+    </div>
+  `;
+
+  panel.style.borderColor = s.phase.accent;
+  panel.querySelector('.detail-panel::before') && (panel.style.setProperty('--before-bg', s.phase.accent));
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function filterStatuses(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.status-card').forEach(card => {
+    const title = card.dataset.title || '';
+    card.classList.toggle('hidden', q.length > 0 && !title.includes(q));
+  });
+}
+
+// Floating pills background
+function createPills() {
+  const container = document.getElementById('float-pills');
+  const labels = [
+    { text: 'In progress', bg: 'rgba(55,138,221,0.18)', color: '#85B7EB' },
+    { text: 'Ready to accept', bg: 'rgba(186,117,23,0.18)', color: '#EF9F27' },
+    { text: 'Grooming complete', bg: 'rgba(127,119,221,0.18)', color: '#AFA9EC' },
+    { text: 'Blocked', bg: 'rgba(226,75,74,0.18)', color: '#F09595' },
+    { text: 'Accepted', bg: 'rgba(99,153,34,0.18)', color: '#97C459' },
+    { text: 'Dependency', bg: 'rgba(216,90,48,0.18)', color: '#F0997B' },
+    { text: 'To do', bg: 'rgba(55,138,221,0.18)', color: '#85B7EB' },
+    { text: 'Done', bg: 'rgba(136,135,128,0.18)', color: '#B4B2A9' },
+    { text: 'In grooming', bg: 'rgba(127,119,221,0.18)', color: '#AFA9EC' },
+    { text: 'Testing in progress', bg: 'rgba(186,117,23,0.18)', color: '#EF9F27' },
+    { text: 'Refinement complete', bg: 'rgba(29,158,117,0.18)', color: '#5DCAA5' },
+    { text: 'Cancelled', bg: 'rgba(136,135,128,0.18)', color: '#B4B2A9' },
+  ];
+
+  function spawnPill() {
+    const l = labels[Math.floor(Math.random() * labels.length)];
+    const pill = document.createElement('div');
+    pill.className = 'float-pill';
+    pill.textContent = l.text;
+    pill.style.cssText = `
+      background: ${l.bg};
+      border: 0.5px solid ${l.color}55;
+      color: ${l.color};
+      left: ${Math.random() * 90}%;
+      bottom: ${Math.random() * 20}%;
+      animation-duration: ${10 + Math.random() * 14}s;
+      animation-delay: ${Math.random() * -20}s;
+    `;
+    container.appendChild(pill);
+    pill.addEventListener('animationiteration', () => {
+      pill.style.left = Math.random() * 90 + '%';
+    });
+  }
+
+  for (let i = 0; i < 18; i++) spawnPill();
+}
+
+buildPhases();
+createPills();
+</script>
+</body>
+</html>

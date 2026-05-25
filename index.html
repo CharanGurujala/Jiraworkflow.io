@@ -3,781 +3,913 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jira Status Guide — Charan's Team</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<title>Agile Jira Status Guide — NationsBenefits India</title>
+<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@400;500;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --orange-50:#FFF7F0; --orange-100:#FFE8D0; --orange-200:#FFD0A0;
+  --orange-300:#FFB86A; --orange-400:#FF9A38; --orange-500:#F97316;
+  --orange-600:#EA6008; --orange-700:#C44D00;
+  --cream:#FFFBF5; --warm-gray:#F5EEE6;
+  --shadow-sm:0 2px 8px rgba(249,115,22,.12);
+  --shadow-md:0 4px 20px rgba(249,115,22,.18);
+  --shadow-lg:0 8px 40px rgba(249,115,22,.22);
+}
+html { scroll-behavior:smooth; }
+body { font-family:'Nunito',sans-serif; background:var(--cream); color:#1C1410; min-height:100vh; overflow-x:hidden; }
 
-  :root {
-    --purple-light: #EEEDFE; --purple: #7F77DD; --purple-dark: #3C3489;
-    --teal-light: #E1F5EE; --teal: #1D9E75; --teal-dark: #085041;
-    --blue-light: #E6F1FB; --blue: #378ADD; --blue-dark: #0C447C;
-    --amber-light: #FAEEDA; --amber: #BA7517; --amber-dark: #633806;
-    --green-light: #EAF3DE; --green: #639922; --green-dark: #27500A;
-    --red-light: #FCEBEB; --red: #E24B4A; --red-dark: #791F1F;
-    --coral-light: #FAECE7; --coral: #D85A30; --coral-dark: #712B13;
-    --gray-light: #F1EFE8; --gray: #888780; --gray-dark: #444441;
-    --bg: #0d0d14;
-    --card-bg: rgba(255,255,255,0.06);
-    --card-border: rgba(255,255,255,0.1);
-    --text-primary: #f0eee8;
-    --text-secondary: #a09e98;
-    --text-hint: #6a6862;
-  }
+/* ── NAV TABS ── */
+.nav-bar {
+  position:sticky; top:0; z-index:100;
+  background:rgba(255,251,245,.95); backdrop-filter:blur(12px);
+  border-bottom:2px solid var(--orange-200);
+  padding:0 24px;
+  display:flex; align-items:center; gap:4px;
+  box-shadow:var(--shadow-sm);
+}
+.nav-tab {
+  padding:14px 22px; font-family:'Fredoka One',cursive; font-size:14px;
+  letter-spacing:.04em; cursor:pointer; border:none; background:none;
+  color:#9B7B58; border-bottom:3px solid transparent; transition:.2s;
+  white-space:nowrap;
+}
+.nav-tab:hover { color:var(--orange-500); }
+.nav-tab.active { color:var(--orange-600); border-bottom-color:var(--orange-500); }
+.nav-brand { font-family:'Righteous',cursive; font-size:18px; color:var(--orange-500); margin-right:auto; padding:12px 0; }
 
-  html { scroll-behavior: smooth; }
+/* ── PAGE VIEWS ── */
+.page { display:none; }
+.page.active { display:block; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text-primary);
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
+/* ── SHARED BG ── */
+.bg-layer { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.bg-layer::before {
+  content:''; position:absolute; inset:-100px;
+  background:
+    repeating-linear-gradient(-45deg,transparent,transparent 40px,rgba(249,115,22,.04) 40px,rgba(249,115,22,.04) 42px),
+    repeating-linear-gradient(45deg,transparent,transparent 60px,rgba(255,184,106,.05) 60px,rgba(255,184,106,.05) 62px);
+}
+.blob { position:absolute; border-radius:50%; filter:blur(80px); opacity:.35; }
+.blob-1 { width:600px;height:600px;background:radial-gradient(circle,#FFD0A0,#FFB86A);top:-150px;right:-150px;animation:blobFloat 18s ease-in-out infinite; }
+.blob-2 { width:450px;height:450px;background:radial-gradient(circle,#FFF3E0,#FFCC80);bottom:5%;left:-100px;animation:blobFloat 22s ease-in-out infinite reverse; }
+.blob-3 { width:300px;height:300px;background:radial-gradient(circle,#FFE0B2,#FF9A38);top:45%;right:10%;animation:blobFloat 16s ease-in-out infinite 4s; }
+@keyframes blobFloat {
+  0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-40px) scale(1.04)} 66%{transform:translate(-20px,30px) scale(.97)}
+}
+.doodle { position:absolute; opacity:.12; animation:doodleDrift linear infinite; }
+@keyframes doodleDrift { 0%{transform:translateY(0) rotate(0deg);opacity:.08} 50%{opacity:.15} 100%{transform:translateY(-80px) rotate(15deg);opacity:.06} }
 
-  /* ── ANIMATED BACKGROUND ── */
-  .bg-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
+/* ── WRAPPER ── */
+.wrapper { position:relative; z-index:1; max-width:1160px; margin:0 auto; padding:0 24px 80px; }
 
-  .bg-canvas canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
+/* ══════════════════════════════════════
+   PAGE 1 — JIRA STATUS GUIDE
+══════════════════════════════════════ */
 
-  /* Flowing status trail orbs */
-  .orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(70px);
-    opacity: 0.18;
-    animation: drift linear infinite;
-  }
-  .orb-1 { width: 420px; height: 420px; background: #7F77DD; top: -10%; left: -5%; animation-duration: 22s; animation-delay: 0s; }
-  .orb-2 { width: 320px; height: 320px; background: #1D9E75; top: 30%; right: -8%; animation-duration: 28s; animation-delay: -8s; }
-  .orb-3 { width: 500px; height: 500px; background: #378ADD; bottom: -15%; left: 20%; animation-duration: 32s; animation-delay: -15s; }
-  .orb-4 { width: 260px; height: 260px; background: #D85A30; top: 60%; left: 50%; animation-duration: 18s; animation-delay: -5s; }
-  .orb-5 { width: 350px; height: 350px; background: #E24B4A; top: 10%; right: 30%; animation-duration: 25s; animation-delay: -12s; }
+/* Agile Principle Banner */
+.principle-banner {
+  background:white; border:2.5px solid var(--orange-200);
+  border-radius:20px; padding:22px 28px;
+  margin:28px 0 32px; box-shadow:var(--shadow-sm);
+  display:flex; align-items:flex-start; gap:18px;
+  animation:slideUp .5s ease both;
+}
+.principle-num {
+  font-family:'Righteous',cursive; font-size:48px; line-height:1;
+  color:var(--orange-200); flex-shrink:0; user-select:none;
+}
+.principle-content { flex:1; }
+.principle-label {
+  font-family:'Fredoka One',cursive; font-size:12px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--orange-400); margin-bottom:5px;
+  display:flex; align-items:center; gap:8px;
+}
+.principle-text {
+  font-family:'Righteous',cursive; font-size:18px; color:#1C1410;
+  line-height:1.45; margin-bottom:8px;
+}
+.principle-sub { font-size:13px; color:#9B7B58; font-weight:600; line-height:1.6; }
+.principle-actions { display:flex; align-items:center; gap:12px; margin-top:14px; flex-wrap:wrap; }
+.btn-next-principle {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--orange-500); color:white;
+  font-family:'Fredoka One',cursive; font-size:13px; letter-spacing:.04em;
+  padding:8px 20px; border-radius:30px; border:none; cursor:pointer;
+  box-shadow:0 4px 14px rgba(249,115,22,.4); transition:transform .15s,box-shadow .15s;
+}
+.btn-next-principle:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(249,115,22,.5); }
+.principle-progress { display:flex; gap:5px; align-items:center; }
+.pdot { width:8px;height:8px;border-radius:50%;background:var(--orange-200);transition:background .2s; }
+.pdot.active { background:var(--orange-500); }
 
-  @keyframes drift {
-    0%   { transform: translate(0,0) scale(1); }
-    25%  { transform: translate(40px,-60px) scale(1.05); }
-    50%  { transform: translate(-30px,80px) scale(0.95); }
-    75%  { transform: translate(60px,30px) scale(1.08); }
-    100% { transform: translate(0,0) scale(1); }
-  }
+/* hero */
+.hero { padding:40px 0 36px; display:grid; grid-template-columns:1fr auto; align-items:center; gap:32px; }
+@media(max-width:700px){ .hero{grid-template-columns:1fr} .hero-illustration{display:none} }
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--orange-400); color:#fff;
+  font-family:'Fredoka One',cursive; font-size:13px; letter-spacing:.1em; text-transform:uppercase;
+  padding:6px 16px; border-radius:30px; margin-bottom:16px;
+  box-shadow:0 4px 14px rgba(249,115,22,.4); animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.sprint-dot { width:8px;height:8px;border-radius:50%;background:#fff;animation:sprintPulse 1.6s ease-in-out infinite; }
+@keyframes sprintPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.6);opacity:.5}}
+.hero h1 { font-family:'Righteous',cursive; font-size:clamp(40px,6.5vw,78px); line-height:1; letter-spacing:-.01em; color:#1C1410; animation:slideUp .6s ease .1s both; }
+.hero h1 .highlight { color:var(--orange-500); display:inline-block; position:relative; }
+.hero h1 .highlight::after { content:''; position:absolute; left:0;bottom:-4px;width:100%;height:5px;background:var(--orange-300);border-radius:3px;transform:skewX(-6deg); }
+.hero-sub { margin-top:18px; font-size:16px; color:#6B4F35; line-height:1.65; max-width:520px; font-weight:500; animation:slideUp .6s ease .2s both; }
+.hero-illustration { animation:slideUp .7s ease .3s both; flex-shrink:0; }
+.search-wrap { max-width:520px; position:relative; margin-top:24px; animation:slideUp .6s ease .3s both; }
+.search-wrap .search-icon { position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--orange-400); }
+.search-wrap input {
+  width:100%; background:white; border:2.5px solid var(--orange-200); border-radius:50px;
+  padding:13px 20px 13px 48px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:600;
+  color:#1C1410; outline:none; box-shadow:var(--shadow-sm); transition:border-color .2s,box-shadow .2s;
+}
+.search-wrap input::placeholder { color:#C8A882; }
+.search-wrap input:focus { border-color:var(--orange-400); box-shadow:var(--shadow-md),0 0 0 4px rgba(249,115,22,.12); }
 
-  /* Floating mini status pills in background */
-  .float-pill {
-    position: absolute;
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    letter-spacing: 0.03em;
-    opacity: 0;
-    animation: floatUp linear infinite;
-    white-space: nowrap;
-    pointer-events: none;
-  }
-  @keyframes floatUp {
-    0%   { opacity: 0; transform: translateY(40px) scale(0.85); }
-    10%  { opacity: 0.22; }
-    80%  { opacity: 0.18; }
-    100% { opacity: 0; transform: translateY(-120px) scale(1.05); }
-  }
+.stats-ribbon { display:flex; gap:16px; flex-wrap:wrap; margin:28px 0 36px; animation:slideUp .6s ease .35s both; }
+.stat-pill {
+  display:flex; align-items:center; gap:10px;
+  background:white; border:2px solid var(--orange-200); border-radius:50px;
+  padding:10px 20px; font-weight:700; font-size:14px; color:#1C1410;
+  box-shadow:var(--shadow-sm); transition:transform .15s,box-shadow .15s;
+}
+.stat-pill:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.stat-pill .num { font-family:'Righteous',cursive; font-size:22px; color:var(--orange-500); line-height:1; }
+.vocab-strip { display:flex; gap:10px; flex-wrap:wrap; margin:0 0 32px; animation:slideUp .6s ease .4s both; }
+.vocab-pill {
+  background:white; border:2px solid var(--orange-200); border-radius:40px;
+  padding:7px 16px; font-family:'Fredoka One',cursive; font-size:13px;
+  color:var(--orange-600); box-shadow:var(--shadow-sm);
+  display:flex; align-items:center; gap:6px; cursor:default;
+  transition:transform .15s,box-shadow .15s;
+}
+.vocab-pill:hover { transform:translateY(-2px) rotate(-1deg); box-shadow:var(--shadow-md); }
 
-  /* Grid lines overlay */
-  .grid-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: 48px 48px;
-    pointer-events: none;
-  }
+.flow-diagram-section {
+  background:white; border:2.5px solid var(--orange-200); border-radius:24px;
+  padding:28px 32px; margin-bottom:40px; box-shadow:var(--shadow-sm);
+}
+.flow-diagram-title { font-family:'Righteous',cursive; font-size:22px; color:#1C1410; margin-bottom:6px; }
+.flow-diagram-sub { font-size:13px; font-weight:600; color:#9B7B58; margin-bottom:24px; }
+.flow-track { display:flex; align-items:center; flex-wrap:wrap; gap:6px; row-gap:12px; }
+.flow-node {
+  padding:8px 16px; border-radius:50px; font-family:'Fredoka One',cursive; font-size:13px;
+  border:2px solid; box-shadow:0 2px 8px rgba(0,0,0,.07); cursor:pointer;
+  transition:transform .15s,box-shadow .15s; white-space:nowrap; background:transparent;
+}
+.flow-node:hover { transform:translateY(-2px) scale(1.04); box-shadow:0 6px 16px rgba(0,0,0,.12); }
+.flow-arrow { font-size:18px; color:var(--orange-300); font-weight:900; user-select:none; }
 
-  /* ── LAYOUT ── */
-  .wrapper {
-    position: relative;
-    z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 24px 80px;
-  }
+.detail-panel {
+  background:white; border:2.5px solid var(--orange-200); border-radius:24px;
+  padding:0; margin:0 0 40px; overflow:hidden; box-shadow:var(--shadow-lg); transition:border-color .3s;
+}
+.detail-top-bar { height:6px; background:var(--orange-300); transition:background .3s; }
+.detail-body-inner { padding:28px 32px; }
+.detail-empty {
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:12px; padding:48px 32px;
+  color:#C8A882; font-size:14px; font-weight:600; text-align:center;
+}
+.big-arrow { font-size:36px; opacity:.4; animation:arrowBounce 1.5s ease-in-out infinite; }
+@keyframes arrowBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.detail-header-row { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
+.detail-title { font-family:'Righteous',cursive; font-size:26px; line-height:1.1; letter-spacing:-.01em; }
+.detail-owner {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--warm-gray); border:1.5px solid var(--orange-200);
+  border-radius:30px; padding:6px 16px; font-size:13px; font-weight:700; color:#7A5C3E; white-space:nowrap;
+}
+.detail-desc { font-size:14.5px; color:#4A3728; line-height:1.75; font-weight:500; margin-bottom:24px; max-width:700px; }
+.flows-label { font-family:'Fredoka One',cursive; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:#C8A882; margin-bottom:10px; }
+.flows-list { display:flex; flex-wrap:wrap; gap:10px; }
+.flow-chip {
+  display:inline-flex; align-items:center; gap:7px;
+  background:var(--orange-50); border:2px solid var(--orange-200); border-radius:30px;
+  padding:6px 14px; font-size:13px; font-weight:700; color:var(--orange-600); cursor:default;
+  transition:background .15s,transform .15s;
+}
+.flow-chip:hover { background:var(--orange-100); transform:translateX(3px); }
 
-  /* ── HERO ── */
-  .hero {
-    padding: 72px 0 52px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
+.phase-section { margin-bottom:44px; }
+.phase-header { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+.phase-badge {
+  display:inline-flex; align-items:center; gap:8px; padding:7px 18px;
+  border-radius:50px; font-family:'Fredoka One',cursive; font-size:15px; letter-spacing:.04em;
+  border:2px solid; box-shadow:0 3px 10px rgba(0,0,0,.08); cursor:default;
+}
+.phase-icon { font-size:18px; }
+.phase-line { flex:1; height:2px; border-radius:2px; opacity:.25; }
+.phase-count { font-size:12px; font-weight:700; color:#9B7B58; letter-spacing:.05em; text-transform:uppercase; }
+.status-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
+.status-card {
+  background:white; border:2.5px solid transparent; border-radius:20px;
+  padding:18px 20px 16px; cursor:pointer; position:relative; overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+  transition:transform .2s cubic-bezier(.34,1.4,.64,1),box-shadow .2s,border-color .2s;
+}
+.status-card::before {
+  content:''; position:absolute; top:0;left:0;right:0;height:4px;
+  border-radius:18px 18px 0 0; opacity:0; transition:opacity .2s;
+}
+.status-card:hover { transform:translateY(-5px) scale(1.01); box-shadow:0 12px 32px rgba(0,0,0,.12); }
+.status-card:hover::before,.status-card.active::before { opacity:1; }
+.status-card.active { border-width:2.5px; transform:translateY(-4px) scale(1.01); box-shadow:0 12px 36px rgba(0,0,0,.14); }
+.status-card.hidden { display:none; }
+.card-special { border-style:dashed !important; }
+.card-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 12px 4px 10px; border-radius:30px; font-family:'Fredoka One',cursive;
+  font-size:12px; letter-spacing:.04em; margin-bottom:12px; border:1.5px solid transparent;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+.bdot { width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;animation:dotBeat 2s ease-in-out infinite; }
+@keyframes dotBeat{0%,100%{transform:scale(1)}50%{transform:scale(.65)}}
+.card-title { font-family:'Fredoka One',cursive; font-size:16px; color:#1C1410; margin-bottom:7px; line-height:1.25; }
+.card-desc { font-size:12.5px; color:#7A5C3E; line-height:1.55; font-weight:500; }
 
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(127,119,221,0.15);
-    border: 0.5px solid rgba(127,119,221,0.35);
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 12px;
-    color: #a9a4f0;
-    letter-spacing: 0.06em;
-    font-weight: 500;
-    text-transform: uppercase;
-    animation: fadeDown 0.6s ease both;
-  }
-  .hero-tag span.dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #7F77DD;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
 
-  .hero h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(38px, 6vw, 72px);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    animation: fadeDown 0.7s ease 0.1s both;
-  }
-  .hero h1 em {
-    font-style: normal;
-    background: linear-gradient(135deg, #7F77DD 0%, #1D9E75 50%, #378ADD 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+/* ══════════════════════════════════════
+   PAGE 2 — CONFIDENCE VOTE
+══════════════════════════════════════ */
+.cv-page { padding:48px 0 80px; }
+.cv-header { text-align:center; margin-bottom:40px; animation:slideUp .5s ease both; }
+.cv-header h2 { font-family:'Righteous',cursive; font-size:clamp(34px,5vw,58px); color:#1C1410; margin-bottom:10px; }
+.cv-header h2 span { color:var(--orange-500); }
+.cv-header p { font-size:16px; color:#7A5C3E; font-weight:500; max-width:560px; margin:0 auto; line-height:1.65; }
 
-  .hero p {
-    font-size: 16px;
-    color: var(--text-secondary);
-    max-width: 560px;
-    line-height: 1.65;
-    animation: fadeDown 0.7s ease 0.2s both;
-  }
+/* ADD VOTER */
+.cv-add-section {
+  background:white; border:2.5px solid var(--orange-200); border-radius:24px;
+  padding:28px 32px; margin-bottom:32px; box-shadow:var(--shadow-sm); animation:slideUp .5s ease .1s both;
+}
+.cv-add-title { font-family:'Fredoka One',cursive; font-size:18px; color:#1C1410; margin-bottom:18px; }
+.cv-add-row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+.cv-field { display:flex; flex-direction:column; gap:6px; flex:1; min-width:180px; }
+.cv-field label { font-size:13px; font-weight:700; color:#7A5C3E; letter-spacing:.04em; }
+.cv-field input {
+  background:var(--orange-50); border:2px solid var(--orange-200); border-radius:12px;
+  padding:11px 16px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:600;
+  color:#1C1410; outline:none; transition:border-color .2s;
+}
+.cv-field input:focus { border-color:var(--orange-400); }
+.cv-field input::placeholder { color:#C8A882; }
 
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+/* VOTE BUTTONS 1-5 */
+.vote-btn-group { display:flex; gap:8px; flex-wrap:wrap; }
+.vote-btn {
+  width:52px; height:52px; border-radius:14px; border:2.5px solid; cursor:pointer;
+  font-family:'Righteous',cursive; font-size:20px; transition:transform .15s,box-shadow .15s,background .15s;
+  display:flex; align-items:center; justify-content:center; position:relative;
+}
+.vote-btn.v1,.vote-btn.v2 { background:#FFF1F2; border-color:#FDA4AF; color:#BE123C; }
+.vote-btn.v3 { background:#FFFBEB; border-color:#FCD34D; color:#B45309; }
+.vote-btn.v4,.vote-btn.v5 { background:#F0FDF4; border-color:#86EFAC; color:#15803D; }
+.vote-btn:hover { transform:translateY(-3px) scale(1.08); box-shadow:0 6px 18px rgba(0,0,0,.14); }
+.vote-btn.selected { transform:translateY(-4px) scale(1.12); box-shadow:0 8px 24px rgba(0,0,0,.18); }
+.vote-btn.selected::after {
+  content:'✓'; position:absolute; top:-8px; right:-8px;
+  width:18px; height:18px; border-radius:50%; background:var(--orange-500);
+  color:white; font-size:10px; font-family:'Nunito',sans-serif; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 6px rgba(249,115,22,.4);
+}
+.vote-scale-labels { display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:#9B7B58; margin-top:6px; padding:0 2px; }
 
-  /* ── SEARCH BAR ── */
-  .search-wrap {
-    width: 100%;
-    max-width: 480px;
-    position: relative;
-    margin-top: 4px;
-    animation: fadeDown 0.7s ease 0.3s both;
-  }
-  .search-wrap svg {
-    position: absolute;
-    left: 14px; top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-hint);
-    width: 16px; height: 16px;
-  }
-  .search-wrap input {
-    width: 100%;
-    background: rgba(255,255,255,0.06);
-    border: 0.5px solid rgba(255,255,255,0.12);
-    border-radius: 12px;
-    padding: 11px 16px 11px 40px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--text-primary);
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .search-wrap input::placeholder { color: var(--text-hint); }
-  .search-wrap input:focus {
-    border-color: rgba(127,119,221,0.5);
-    background: rgba(255,255,255,0.09);
-  }
+.btn-cast-vote {
+  padding:13px 28px; border-radius:50px; border:none; cursor:pointer;
+  font-family:'Fredoka One',cursive; font-size:16px; letter-spacing:.04em;
+  background:var(--orange-500); color:white;
+  box-shadow:0 4px 14px rgba(249,115,22,.4); transition:transform .15s,box-shadow .15s;
+  white-space:nowrap; align-self:flex-end;
+}
+.btn-cast-vote:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(249,115,22,.5); }
+.btn-cast-vote:disabled { opacity:.4; cursor:not-allowed; transform:none; }
 
-  /* ── PHASE SECTION ── */
-  .phase-section {
-    margin-bottom: 36px;
-    animation: fadeUp 0.5s ease both;
-  }
-  .phase-section:nth-child(1) { animation-delay: 0.1s; }
-  .phase-section:nth-child(2) { animation-delay: 0.15s; }
-  .phase-section:nth-child(3) { animation-delay: 0.2s; }
-  .phase-section:nth-child(4) { animation-delay: 0.25s; }
-  .phase-section:nth-child(5) { animation-delay: 0.3s; }
-  .phase-section:nth-child(6) { animation-delay: 0.35s; }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+/* VOTERS TABLE */
+.cv-voters-section {
+  background:white; border:2.5px solid var(--orange-200); border-radius:24px;
+  padding:28px 32px; margin-bottom:32px; box-shadow:var(--shadow-sm);
+  animation:slideUp .5s ease .2s both;
+}
+.cv-voters-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+.cv-voters-title { font-family:'Fredoka One',cursive; font-size:18px; color:#1C1410; }
+.btn-calculate {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 24px; border-radius:30px; border:none; cursor:pointer;
+  font-family:'Fredoka One',cursive; font-size:14px; letter-spacing:.04em;
+  background:var(--orange-500); color:white;
+  box-shadow:0 4px 14px rgba(249,115,22,.4); transition:transform .15s,box-shadow .15s;
+}
+.btn-calculate:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(249,115,22,.5); }
+.btn-calculate:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+.btn-reset-votes {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:10px 20px; border-radius:30px;
+  border:2px solid var(--orange-200); background:white; cursor:pointer;
+  font-family:'Fredoka One',cursive; font-size:13px; color:#9B7B58;
+  transition:.15s;
+}
+.btn-reset-votes:hover { border-color:var(--orange-400); color:var(--orange-600); }
 
-  .phase-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .phase-number {
-    width: 26px; height: 26px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Syne', sans-serif;
-    font-size: 12px; font-weight: 700;
-  }
-  .phase-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-  .phase-line {
-    flex: 1;
-    height: 0.5px;
-    background: rgba(255,255,255,0.08);
-  }
-  .phase-count {
-    font-size: 11px;
-    color: var(--text-hint);
-    font-family: 'DM Sans', sans-serif;
-  }
+.voters-empty { text-align:center; padding:32px; color:#C8A882; font-weight:600; font-size:14px; }
+.voters-list { display:flex; flex-direction:column; gap:10px; }
+.voter-row {
+  display:flex; align-items:center; gap:14px; padding:14px 18px;
+  background:var(--orange-50); border:1.5px solid var(--orange-200); border-radius:14px;
+  transition:background .15s;
+}
+.voter-name { font-weight:700; font-size:15px; color:#1C1410; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.voter-score-badge {
+  width:42px; height:42px; border-radius:12px; border:2.5px solid;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Righteous',cursive; font-size:20px; flex-shrink:0;
+}
+.score-red   { background:#FFF1F2; border-color:#FDA4AF; color:#BE123C; }
+.score-amber { background:#FFFBEB; border-color:#FCD34D; color:#B45309; }
+.score-green { background:#F0FDF4; border-color:#86EFAC; color:#15803D; }
+.voter-remove { background:none; border:none; cursor:pointer; font-size:18px; opacity:.4; transition:opacity .15s; padding:4px; }
+.voter-remove:hover { opacity:.9; }
 
-  /* ── STATUS GRID ── */
-  .status-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 12px;
-  }
+/* RESULT PANEL */
+.cv-result {
+  background:white; border:3px solid var(--orange-200); border-radius:28px;
+  padding:40px 32px; text-align:center; box-shadow:var(--shadow-lg);
+  display:none; animation:resultPop .4s cubic-bezier(.34,1.4,.64,1) both;
+}
+@keyframes resultPop{from{opacity:0;transform:scale(.85) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.result-label { font-family:'Fredoka One',cursive; font-size:14px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; }
+.result-score {
+  font-family:'Righteous',cursive; font-size:clamp(80px,14vw,140px); line-height:1;
+  margin-bottom:8px; display:block;
+}
+.result-desc { font-size:17px; font-weight:700; margin-bottom:20px; }
+.result-meta { font-size:13px; color:#9B7B58; font-weight:600; }
+.result-bar-wrap { max-width:320px; margin:20px auto 0; }
+.result-bar-track { height:14px; background:var(--orange-100); border-radius:7px; overflow:hidden; }
+.result-bar-fill { height:100%; border-radius:7px; transition:width 1s cubic-bezier(.34,1,.64,1); }
+.result-red { border-color:#FDA4AF; }
+.result-red .result-score,.result-red .result-label { color:#BE123C; }
+.result-red .result-bar-fill { background:#F09595; }
+.result-amber { border-color:#FCD34D; }
+.result-amber .result-score,.result-amber .result-label { color:#B45309; }
+.result-amber .result-bar-fill { background:#FCD34D; }
+.result-green { border-color:#86EFAC; }
+.result-green .result-score,.result-green .result-label { color:#15803D; }
+.result-green .result-bar-fill { background:#86EFAC; }
 
-  /* ── STATUS CARD ── */
-  .status-card {
-    background: var(--card-bg);
-    border: 0.5px solid var(--card-border);
-    border-radius: 16px;
-    padding: 18px 20px;
-    cursor: pointer;
-    transition: transform 0.2s, border-color 0.2s, background 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .status-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    opacity: 0;
-    transition: opacity 0.2s;
-    border-radius: 16px 16px 0 0;
-  }
-  .status-card:hover {
-    transform: translateY(-3px);
-    background: rgba(255,255,255,0.09);
-    border-color: rgba(255,255,255,0.18);
-  }
-  .status-card:hover::before { opacity: 1; }
-  .status-card.active {
-    border-width: 1.5px;
-    background: rgba(255,255,255,0.1);
-    transform: translateY(-3px);
-  }
-  .status-card.active::before { opacity: 1; }
-
-  .card-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px 4px 8px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 500;
-    margin-bottom: 10px;
-    letter-spacing: 0.02em;
-  }
-  .card-badge .badge-dot {
-    width: 5px; height: 5px; border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 6px;
-    line-height: 1.3;
-  }
-  .card-desc {
-    font-size: 12px;
-    color: var(--text-secondary);
-    line-height: 1.55;
-  }
-
-  /* hidden for filter */
-  .status-card.hidden { display: none; }
-
-  /* ── DETAIL PANEL ── */
-  .detail-panel {
-    background: rgba(255,255,255,0.04);
-    border: 0.5px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 28px 32px;
-    margin: 32px 0;
-    min-height: 160px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  .detail-panel::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 20px 20px 0 0;
-  }
-  .detail-empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px;
-    min-height: 120px;
-    color: var(--text-hint);
-    font-size: 13px;
-  }
-  .detail-empty .arrow-icon {
-    font-size: 28px;
-    opacity: 0.3;
-  }
-
-  .detail-content { animation: fadeIn 0.25s ease; }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-
-  .detail-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-  .detail-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-  }
-  .detail-owner {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: rgba(255,255,255,0.08);
-    border: 0.5px solid rgba(255,255,255,0.12);
-    border-radius: 20px;
-    padding: 5px 12px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .detail-owner svg { width: 13px; height: 13px; }
-
-  .detail-desc {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    margin-bottom: 20px;
-    max-width: 680px;
-  }
-
-  .flows-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-hint);
-    margin-bottom: 10px;
-  }
-  .flows-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .flow-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255,255,255,0.07);
-    border: 0.5px solid rgba(255,255,255,0.12);
-    border-radius: 20px;
-    padding: 5px 12px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    transition: background 0.15s;
-    cursor: default;
-  }
-  .flow-chip svg { width: 12px; height: 12px; opacity: 0.6; }
-
-  /* ── STATS ROW ── */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
-    margin-bottom: 40px;
-    animation: fadeUp 0.5s ease 0.05s both;
-  }
-  .stat-card {
-    background: var(--card-bg);
-    border: 0.5px solid var(--card-border);
-    border-radius: 14px;
-    padding: 16px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .stat-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 28px;
-    font-weight: 800;
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 12px;
-    color: var(--text-hint);
-  }
-
-  /* ── FOOTER ── */
-  .footer {
-    text-align: center;
-    padding: 40px 0 0;
-    font-size: 12px;
-    color: var(--text-hint);
-    border-top: 0.5px solid rgba(255,255,255,0.06);
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 600px) {
-    .hero { padding: 48px 0 36px; }
-    .detail-panel { padding: 20px; }
-    .detail-header { flex-direction: column; }
-  }
+/* ── FOOTER ── */
+.site-footer {
+  text-align:center; padding:36px 0 0;
+  border-top:2px dashed var(--orange-200);
+  font-size:13px; font-weight:600; color:#9B7B58;
+  position:relative; z-index:1;
+}
+.site-footer .brand { font-family:'Righteous',cursive; font-size:18px; color:var(--orange-500); display:block; margin-bottom:4px; }
 </style>
 </head>
 <body>
 
-<!-- Background -->
-<div class="bg-canvas">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-  <div class="orb orb-4"></div>
-  <div class="orb orb-5"></div>
-  <div id="float-pills"></div>
+<!-- BACKGROUND -->
+<div class="bg-layer">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <svg class="doodle" style="top:12%;left:3%;animation-duration:14s" width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="#F97316" stroke-width="4" stroke-dasharray="8 6"/></svg>
+  <svg class="doodle" style="top:35%;right:4%;animation-duration:20s;animation-delay:-7s" width="50" height="50" viewBox="0 0 50 50"><rect x="8" y="8" width="34" height="34" rx="8" fill="none" stroke="#F97316" stroke-width="4" stroke-dasharray="6 5"/></svg>
+  <svg class="doodle" style="top:65%;left:7%;animation-duration:17s;animation-delay:-4s" width="70" height="40" viewBox="0 0 70 40"><path d="M8 20 Q35 4 62 20 Q35 36 8 20Z" fill="none" stroke="#F97316" stroke-width="3.5"/></svg>
+  <svg class="doodle" style="top:80%;right:8%;animation-duration:23s;animation-delay:-11s" width="55" height="55" viewBox="0 0 55 55"><polygon points="27.5,4 52,48 3,48" fill="none" stroke="#F97316" stroke-width="4"/></svg>
 </div>
-<div class="grid-overlay"></div>
 
+<!-- NAV -->
+<nav class="nav-bar">
+  <span class="nav-brand">🏃 NationsBenefits</span>
+  <button class="nav-tab active" onclick="switchTab('jira')">📋 Jira Status Guide</button>
+  <button class="nav-tab" onclick="switchTab('confidence')">🗳️ Confidence Vote</button>
+</nav>
+
+<!-- ══ PAGE: JIRA STATUS ══ -->
+<div id="page-jira" class="page active">
 <div class="wrapper">
 
-  <!-- Hero -->
+  <!-- AGILE PRINCIPLE BANNER -->
+  <div class="principle-banner" id="principle-banner">
+    <div class="principle-num" id="principle-num">01</div>
+    <div class="principle-content">
+      <div class="principle-label">
+        <span>🌟</span> Agile Principle of the Day
+      </div>
+      <div class="principle-text" id="principle-text"></div>
+      <div class="principle-sub" id="principle-sub"></div>
+      <div class="principle-actions">
+        <button class="btn-next-principle" onclick="nextPrinciple()">Next Principle →</button>
+        <div class="principle-progress" id="principle-dots"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
   <header class="hero">
-    <div class="hero-tag"><span class="dot"></span> Jira workflow reference</div>
-    <h1>Every status,<br><em>explained.</em></h1>
-    <p>From the first grooming session to production release — understand what each Jira status means, who owns it, and where the story goes next.</p>
-    <div class="search-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+    <div class="hero-text">
+      <div class="hero-eyebrow"><span class="sprint-dot"></span> Agile Sprint Reference Guide</div>
+      <h1>Jira Status<br><span class="highlight">Playbook</span></h1>
+      <p class="hero-sub">Your team's go-to reference for every Jira status — what it means, who owns it, and where the story flows next. 🚀</p>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Search a status… e.g. Blocked, Regression, Done" oninput="filterStatuses(this.value)">
+      </div>
+    </div>
+    <div class="hero-illustration">
+      <svg width="260" height="220" viewBox="0 0 260 220" fill="none">
+        <rect x="10" y="10" width="240" height="200" rx="18" fill="white" stroke="#FFD0A0" stroke-width="2.5"/>
+        <rect x="10" y="10" width="240" height="40" rx="18" fill="#FFB86A"/>
+        <rect x="10" y="40" width="240" height="10" fill="#FFB86A"/>
+        <text x="130" y="36" font-family="Righteous,cursive" font-size="15" fill="white" text-anchor="middle">🏃 Sprint Board</text>
+        <rect x="22" y="62" width="64" height="18" rx="6" fill="#F0FDFA"/><text x="54" y="75" font-family="Fredoka One,cursive" font-size="10" fill="#0D9488" text-anchor="middle">TO DO</text>
+        <rect x="98" y="62" width="64" height="18" rx="6" fill="#EFF6FF"/><text x="130" y="75" font-family="Fredoka One,cursive" font-size="10" fill="#1D6FC4" text-anchor="middle">IN PROGRESS</text>
+        <rect x="174" y="62" width="64" height="18" rx="6" fill="#F0FDF4"/><text x="206" y="75" font-family="Fredoka One,cursive" font-size="10" fill="#15803D" text-anchor="middle">DONE</text>
+        <rect x="22" y="86" width="64" height="30" rx="7" fill="#F5F0FF" stroke="#C4B5FD" stroke-width="1.5"/><text x="54" y="99" font-family="Nunito,sans-serif" font-size="8" fill="#7C3AED" text-anchor="middle" font-weight="700">User Story</text><text x="54" y="109" font-family="Nunito,sans-serif" font-size="7" fill="#9B7B58" text-anchor="middle">#US-104</text>
+        <rect x="22" y="122" width="64" height="30" rx="7" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.5"/><text x="54" y="135" font-family="Nunito,sans-serif" font-size="8" fill="#C2410C" text-anchor="middle" font-weight="700">User Story</text><text x="54" y="145" font-family="Nunito,sans-serif" font-size="7" fill="#9B7B58" text-anchor="middle">#US-107</text>
+        <rect x="98" y="86" width="64" height="30" rx="7" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/><text x="130" y="99" font-family="Nunito,sans-serif" font-size="8" fill="#1D6FC4" text-anchor="middle" font-weight="700">User Story</text><text x="130" y="109" font-family="Nunito,sans-serif" font-size="7" fill="#9B7B58" text-anchor="middle">#US-101</text>
+        <rect x="98" y="122" width="64" height="30" rx="7" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1.5"/><text x="130" y="135" font-family="Nunito,sans-serif" font-size="8" fill="#BE123C" text-anchor="middle" font-weight="700">🚫 Blocked</text><text x="130" y="145" font-family="Nunito,sans-serif" font-size="7" fill="#9B7B58" text-anchor="middle">#US-103</text>
+        <rect x="174" y="86" width="64" height="30" rx="7" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/><text x="206" y="99" font-family="Nunito,sans-serif" font-size="8" fill="#15803D" text-anchor="middle" font-weight="700">✅ Accepted</text><text x="206" y="109" font-family="Nunito,sans-serif" font-size="7" fill="#9B7B58" text-anchor="middle">#US-098</text>
+        <rect x="174" y="122" width="64" height="30" rx="7" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/><text x="206" y="135" font-family="Nunito,sans-serif" font-size="8" fill="#15803D" text-anchor="middle" font-weight="700">✅ Accepted</text><text x="206" y="145" font-family="Nunito,sans-serif" font-size="7" fill="#9B7B58" text-anchor="middle">#US-099</text>
+        <rect x="22" y="166" width="216" height="6" rx="3" fill="#FFE0B2"/>
+        <rect x="22" y="166" width="148" height="6" rx="3" fill="#F97316"/>
+        <text x="22" y="183" font-family="Fredoka One,cursive" font-size="9" fill="#C44D00">Sprint Velocity</text>
+        <text x="238" y="183" font-family="Fredoka One,cursive" font-size="9" fill="#15803D" text-anchor="end">68%</text>
+        <polyline points="22,200 60,196 100,188 140,182 180,175 220,168 238,162" stroke="#F97316" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <text x="22" y="213" font-family="Fredoka One,cursive" font-size="8.5" fill="#9B7B58">Burndown</text>
       </svg>
-      <input type="text" id="search-input" placeholder="Search a status… e.g. Blocked, To Do, Accepted" oninput="filterStatuses(this.value)">
     </div>
   </header>
 
-  <!-- Stats -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <span class="stat-num" style="color:#7F77DD">13</span>
-      <span class="stat-label">Total statuses</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-num" style="color:#1D9E75">6</span>
-      <span class="stat-label">Workflow phases</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-num" style="color:#E24B4A">3</span>
-      <span class="stat-label">Special states</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-num" style="color:#BA7517">2</span>
-      <span class="stat-label">Closure paths</span>
-    </div>
+  <!-- VOCAB -->
+  <div class="vocab-strip">
+    <div class="vocab-pill">📋 Epic</div><div class="vocab-pill">📝 User Story</div>
+    <div class="vocab-pill">🏃 Sprint</div><div class="vocab-pill">🔁 Backlog</div>
+    <div class="vocab-pill">🎯 Acceptance Criteria</div><div class="vocab-pill">🧹 Grooming</div>
+    <div class="vocab-pill">🔬 Refinement</div><div class="vocab-pill">🚀 Release</div>
+    <div class="vocab-pill">🔥 Velocity</div><div class="vocab-pill">📌 Definition of Done</div>
   </div>
 
-  <!-- Detail panel -->
+  <!-- STATS -->
+  <div class="stats-ribbon">
+    <div class="stat-pill"><span class="num">13</span> Total statuses</div>
+    <div class="stat-pill"><span class="num">6</span> Workflow phases</div>
+    <div class="stat-pill"><span class="num">3</span> Special states</div>
+    <div class="stat-pill"><span class="num">2</span> Closure paths</div>
+    <div class="stat-pill">🆕 <span style="color:var(--orange-500);font-family:'Fredoka One',cursive">Regression</span> phase added</div>
+  </div>
+
+  <!-- FLOW AT A GLANCE -->
+  <div class="flow-diagram-section">
+    <div class="flow-diagram-title">🗺️ Workflow at a Glance</div>
+    <div class="flow-diagram-sub">Click any status pill to jump to its definition</div>
+    <div class="flow-track" id="flow-track"></div>
+  </div>
+
+  <!-- DETAIL PANEL -->
   <div class="detail-panel" id="detail-panel">
-    <div class="detail-empty" id="detail-empty">
-      <div class="arrow-icon">↑</div>
-      <span>Click any status card to see its full definition</span>
+    <div class="detail-top-bar" id="detail-bar"></div>
+    <div id="detail-empty" class="detail-empty">
+      <div class="big-arrow">👆</div>
+      <span>Click any status card to see its full Agile definition, owner & next steps</span>
     </div>
-    <div id="detail-content" style="display:none"></div>
+    <div id="detail-body" class="detail-body-inner" style="display:none"></div>
   </div>
 
-  <!-- Phases -->
+  <!-- PHASES -->
   <main id="phases-container"></main>
 
-  <footer class="footer">
-    <p>Jira Status Reference Guide &nbsp;·&nbsp; Evernorth Health Services</p>
-    <p style="margin-top:6px">Built for Scrum Masters &amp; Agile Teams</p>
-  </footer>
+</div><!-- /wrapper -->
+</div><!-- /page-jira -->
 
+<!-- ══ PAGE: CONFIDENCE VOTE ══ -->
+<div id="page-confidence" class="page">
+<div class="wrapper">
+<div class="cv-page">
+
+  <div class="cv-header">
+    <h2>🗳️ Confidence <span>Vote</span></h2>
+    <p>Each team member casts a vote from <strong>1</strong> (not confident) to <strong>5</strong> (super confident). Once everyone votes, calculate the team's average confidence score.</p>
+  </div>
+
+  <!-- ADD VOTER -->
+  <div class="cv-add-section">
+    <div class="cv-add-title">➕ Add Your Vote</div>
+    <div class="cv-add-row">
+      <div class="cv-field">
+        <label>TEAM MEMBER NAME</label>
+        <input type="text" id="voter-name" placeholder="e.g. Charan, Priya, Rahul…" maxlength="40">
+      </div>
+      <div class="cv-field">
+        <label>YOUR CONFIDENCE SCORE</label>
+        <div class="vote-btn-group" id="vote-btns">
+          <button class="vote-btn v1" onclick="selectVote(1)" data-v="1" title="1 — Not confident">1</button>
+          <button class="vote-btn v2" onclick="selectVote(2)" data-v="2" title="2 — Low confidence">2</button>
+          <button class="vote-btn v3" onclick="selectVote(3)" data-v="3" title="3 — Moderate">3</button>
+          <button class="vote-btn v4" onclick="selectVote(4)" data-v="4" title="4 — Confident">4</button>
+          <button class="vote-btn v5" onclick="selectVote(5)" data-v="5" title="5 — Super confident!">5</button>
+        </div>
+        <div class="vote-scale-labels"><span>😟 Not confident</span><span>😐 Moderate</span><span>🤩 Super confident</span></div>
+      </div>
+      <button class="btn-cast-vote" id="btn-cast" onclick="castVote()" disabled>Cast Vote 🎯</button>
+    </div>
+  </div>
+
+  <!-- VOTER LIST -->
+  <div class="cv-voters-section">
+    <div class="cv-voters-header">
+      <div class="cv-voters-title">📊 Votes Cast — <span id="vote-count">0</span></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-reset-votes" onclick="resetVotes()">🔄 Reset All</button>
+        <button class="btn-calculate" id="btn-calc" onclick="calculateResult()" disabled>Calculate Average 🧮</button>
+      </div>
+    </div>
+    <div id="voters-list-wrap">
+      <div class="voters-empty">No votes yet — add team members above to get started! 👆</div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="cv-result" id="cv-result">
+    <div class="result-label" id="result-label">Team Confidence</div>
+    <span class="result-score" id="result-score">—</span>
+    <div class="result-desc" id="result-desc"></div>
+    <div class="result-meta" id="result-meta"></div>
+    <div class="result-bar-wrap">
+      <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#9B7B58;margin-bottom:6px">
+        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+      </div>
+      <div class="result-bar-track"><div class="result-bar-fill" id="result-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+</div><!-- /cv-page -->
+</div><!-- /wrapper -->
+</div><!-- /page-confidence -->
+
+<!-- FOOTER -->
+<div class="wrapper" style="position:relative;z-index:1">
+  <footer class="site-footer">
+    <span class="brand">Jira Agile Status Playbook</span>
+    NationsBenefits India &nbsp;·&nbsp; Built for Scrum Masters &amp; Agile Teams
+    <div style="margin-top:10px;font-size:22px">🏃‍♂️ 🗂️ ✅ 🚀</div>
+  </footer>
 </div>
 
 <script>
+// ═══════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ═══════════════════════════════════
+// AGILE PRINCIPLES
+// ═══════════════════════════════════
+const principles = [
+  { num:'01', text:'Our highest priority is to satisfy the customer through early and continuous delivery of valuable software.', sub:'Deliver working software frequently — weeks rather than months — with preference to the shorter timescale.' },
+  { num:'02', text:'Welcome changing requirements, even late in development. Agile processes harness change for the customer\'s competitive advantage.', sub:'Agility means embracing change as a feature, not a bug. Flexible teams win.' },
+  { num:'03', text:'Deliver working software frequently, from a couple of weeks to a couple of months.', sub:'Working software is the primary measure of progress, not documentation or plans.' },
+  { num:'04', text:'Business people and developers must work together daily throughout the project.', sub:'Collaboration breaks silos. When business and tech align daily, great things ship.' },
+  { num:'05', text:'Build projects around motivated individuals. Give them the environment and support they need, and trust them to get the job done.', sub:'Autonomy, mastery, and purpose fuel high-performing Agile teams.' },
+  { num:'06', text:'The most efficient and effective method of conveying information is face-to-face conversation.', sub:'Direct communication eliminates ambiguity and builds team trust faster than any tool.' },
+  { num:'07', text:'Working software is the primary measure of progress.', sub:'Shipped features over perfect plans. Value delivered beats percentage complete.' },
+  { num:'08', text:'Agile processes promote sustainable development. The sponsors, developers, and users should be able to maintain a constant pace indefinitely.', sub:'Sustainable pace prevents burnout and keeps quality high sprint after sprint.' },
+  { num:'09', text:'Continuous attention to technical excellence and good design enhances agility.', sub:'Clean code, refactoring, and solid architecture keep teams moving fast long-term.' },
+  { num:'10', text:'Simplicity — the art of maximising the amount of work not done — is essential.', sub:'Do less, better. The best feature is often the one you don\'t build.' },
+  { num:'11', text:'The best architectures, requirements, and designs emerge from self-organising teams.', sub:'Trust your team. Self-organising teams innovate and problem-solve more effectively.' },
+  { num:'12', text:'At regular intervals, the team reflects on how to become more effective, then tunes and adjusts its behaviour accordingly.', sub:'Retrospectives are not optional. Inspect, adapt, improve — every single sprint.' },
+];
+
+let currentPrinciple = 0;
+
+function renderPrinciple() {
+  const p = principles[currentPrinciple];
+  document.getElementById('principle-num').textContent = p.num;
+  document.getElementById('principle-text').textContent = p.text;
+  document.getElementById('principle-sub').textContent = p.sub;
+  const dots = document.getElementById('principle-dots');
+  dots.innerHTML = principles.map((_,i) =>
+    `<div class="pdot${i===currentPrinciple?' active':''}"></div>`
+  ).join('');
+}
+
+function nextPrinciple() {
+  currentPrinciple = (currentPrinciple + 1) % principles.length;
+  const banner = document.getElementById('principle-banner');
+  banner.style.opacity = '0'; banner.style.transform = 'translateY(-8px)';
+  setTimeout(() => {
+    renderPrinciple();
+    banner.style.transition = 'opacity .3s,transform .3s';
+    banner.style.opacity = '1'; banner.style.transform = 'translateY(0)';
+  }, 180);
+}
+
+// Pick a random principle on page load
+currentPrinciple = Math.floor(Math.random() * principles.length);
+renderPrinciple();
+
+// ═══════════════════════════════════
+// JIRA STATUS DATA
+// ═══════════════════════════════════
 const phases = [
-  {
-    id: 'grooming', label: 'Grooming', num: '01',
-    accent: '#7F77DD', accentLight: 'rgba(127,119,221,0.18)',
-    statuses: [
-      { id:'rfg', title:'Ready for grooming', short:'Story awaiting PM clarity from business', badge:'Pre-grooming', owner:'Product Manager',
-        desc:'The user story or epic has been raised by the business but lacks enough clarity to proceed. The PM is responsible for scheduling a grooming session to extract the full definition, goals, and context from stakeholders.',
-        flows:['In grooming'] },
-      { id:'ing', title:'In grooming', short:'Active discussion between PM & business', badge:'Active', owner:'PM + Business',
-        desc:'The grooming session is actively in progress. The PM is working with business stakeholders to define scope, goals, acceptance criteria at a high level, and any constraints. The story is not ready for developers yet.',
-        flows:['Grooming complete', 'Blocked / On hold'] },
-      { id:'gc', title:'Grooming complete', short:'Story definition signed off by PM', badge:'Done', owner:'Product Manager',
-        desc:'The business has provided a clear definition of the user story or epic. The PM has validated it and the story is now ready to be handed over to developers for technical refinement.',
-        flows:['Ready for refinement'] },
-    ]
-  },
-  {
-    id: 'refinement', label: 'Refinement', num: '02',
-    accent: '#1D9E75', accentLight: 'rgba(29,158,117,0.18)',
-    statuses: [
-      { id:'rfr', title:'Ready for refinement', short:'Story queued for dev team review', badge:'Queued', owner:'Scrum Master + Dev Team',
-        desc:'The story is in the backlog and scheduled for a refinement session. The dev team will review scope, ask clarifying questions, and break the story down into technical tasks with clear acceptance criteria.',
-        flows:['Refinement complete', 'Blocked / On hold'] },
-      { id:'rc', title:'Refinement complete', short:'Dev team has clear acceptance criteria', badge:'Sprint-ready', owner:'Dev Team',
-        desc:'Developers have a full understanding of the acceptance criteria, technical approach, and story points. The story is sprint-ready and can be picked up by any available developer.',
-        flows:['To do'] },
-    ]
-  },
-  {
-    id: 'development', label: 'Development', num: '03',
-    accent: '#378ADD', accentLight: 'rgba(55,138,221,0.18)',
-    statuses: [
-      { id:'td', title:'To do', short:'Assigned, not yet started', badge:'Pending', owner:'Developer',
-        desc:'The story has been assigned to a developer within an active sprint but work has not yet begun. It sits in the sprint backlog waiting for the developer to start.',
-        flows:['In progress'] },
-      { id:'ip', title:'In progress', short:'Developer actively building', badge:'Active', owner:'Developer',
-        desc:'The developer has actively started coding the story. Daily standups track progress. The Scrum Master monitors for blockers or impediments that could delay completion.',
-        flows:['Development complete', 'Blocked / On hold', 'Dependency'] },
-      { id:'dc', title:'Development complete', short:'Code done, ready for QA', badge:'Hand-off', owner:'Developer → QA',
-        desc:'Code has been written, reviewed, and merged. The story is ready for QA testing. The developer should notify the QA team and provide any necessary test data or environment details.',
-        flows:['Testing in progress'] },
-    ]
-  },
-  {
-    id: 'qa', label: 'QA', num: '04',
-    accent: '#BA7517', accentLight: 'rgba(186,117,23,0.18)',
-    statuses: [
-      { id:'tip', title:'Testing in progress', short:'QA actively testing the story', badge:'Testing', owner:'QA Engineer',
-        desc:'QA is actively executing test cases against the story. Any defects found are raised and the story may cycle back to In Progress if a bug is logged. Testing covers functional, regression, and UAT as applicable.',
-        flows:['Ready to accept', 'In progress (bug found)'] },
-      { id:'rta', title:'Ready to accept', short:'QA sign-off given, awaiting release', badge:'Signed-off', owner:'PM / Product Owner',
-        desc:'QA has completed testing and given sign-off. The story is functionally complete. The Product Owner or PM makes the final decision on whether this goes to a release or is simply closed out.',
-        flows:['Accepted (if released)', 'Done (if not released)'] },
-    ]
-  },
-  {
-    id: 'closure', label: 'Closure', num: '05',
-    accent: '#639922', accentLight: 'rgba(99,153,34,0.18)',
-    statuses: [
-      { id:'acc', title:'Accepted', short:'Deployed to production', badge:'Released', owner:'Product Manager / PO',
-        desc:'The story has been deployed to the production environment and verified. The Product Owner formally accepts it as delivered. This is the final successful state for stories that go through a release.',
-        flows:['Closed'] },
-      { id:'done', title:'Done', short:'Closed without release to prod', badge:'Closed', owner:'Scrum Master',
-        desc:'The story has been completed and closed without going to a production release — for example, internal improvements, cancelled features post-QA, or stories delivered via a different deployment path.',
-        flows:['Closed'] },
-    ]
-  },
-  {
-    id: 'special', label: 'Special states', num: '⚡',
-    accent: '#E24B4A', accentLight: 'rgba(226,75,74,0.18)',
-    statuses: [
-      { id:'blk', title:'Blocked / On hold', short:'Progress stopped — needs resolution', badge:'Impediment', owner:'Scrum Master (to resolve)',
-        desc:'Progress on the story has stopped due to an impediment. This could be a technical blocker, a missing decision, a resource constraint, or an environment issue. The Scrum Master owns impediment removal. Can occur at any stage.',
+  { id:'grooming', label:'Grooming', icon:'🧹', accent:'#7C3AED', bg:'#F5F0FF', border:'#C4B5FD',
+    agileNote:'The Product Manager collaborates with the Business to define scope, goals, and constraints for each User Story or Epic.',
+    statuses:[
+      { id:'rfg', title:'Ready for Grooming', badge:'Pre-Grooming', short:'Story queued — awaiting PM + Business session', owner:'Product Manager',
+        desc:'The User Story or Epic has been raised by the Business stakeholders but lacks enough clarity to proceed. The PM schedules a Grooming session to extract the full definition, goals, and success criteria.',
+        flows:['In Grooming'] },
+      { id:'ing', title:'In Grooming', badge:'Active Session', short:'PM & Business actively defining the story', owner:'PM + Business Stakeholders',
+        desc:'The Grooming session is in progress. The PM collaborates with Business stakeholders to define scope, high-level Acceptance Criteria, and constraints. The story is not ready for Developers yet.',
+        flows:['Grooming Complete','Blocked / On Hold'] },
+      { id:'gc', title:'Grooming Complete', badge:'Signed Off', short:'Business definition locked in by PM', owner:'Product Manager',
+        desc:'The Business has provided a clear definition of the User Story or Epic. The PM has validated it and the story is now ready for technical Refinement by the Development team.',
+        flows:['Ready for Refinement'] },
+    ]},
+  { id:'refinement', label:'Refinement', icon:'🔬', accent:'#0D9488', bg:'#F0FDFA', border:'#5EEAD4',
+    agileNote:'The Scrum Master facilitates Refinement to ensure Developers have clear Acceptance Criteria and story points before Sprint Planning.',
+    statuses:[
+      { id:'rfr', title:'Ready for Refinement', badge:'Backlog Ready', short:'Story queued for Developers to review', owner:'Scrum Master + Dev Team',
+        desc:'The User Story is in the Product Backlog and scheduled for a Refinement session. The Dev team reviews scope, asks questions, estimates Story Points, and defines technical Acceptance Criteria.',
+        flows:['Refinement Complete','Blocked / On Hold'] },
+      { id:'rc', title:'Refinement Complete', badge:'Sprint-Ready', short:'Dev team has clarity — sprint-ready!', owner:'Development Team',
+        desc:'Developers fully understand the Acceptance Criteria, technical approach, and Story Points. The story is sprint-ready and can be pulled into the next Sprint Planning session.',
+        flows:['To Do'] },
+    ]},
+  { id:'development', label:'Development', icon:'💻', accent:'#1D6FC4', bg:'#EFF6FF', border:'#93C5FD',
+    agileNote:'Developers work within the sprint timebox. The Scrum Master runs daily standups and removes impediments to keep the team in flow.',
+    statuses:[
+      { id:'td', title:'To Do', badge:'Sprint Backlog', short:'Assigned to Developer — not yet started', owner:'Developer',
+        desc:'The User Story has been assigned to a Developer in an active Sprint. Work has not yet started. The story is visible on the Sprint Board and will be picked up in the next Standup.',
+        flows:['In Progress'] },
+      { id:'ip', title:'In Progress', badge:'Active Dev', short:'Developer actively building the story', owner:'Developer',
+        desc:'The Developer has started coding the User Story. Progress is tracked in Daily Standups. The Scrum Master monitors the Burndown Chart and flags any Blockers.',
+        flows:['Development Complete','Blocked / On Hold','Dependency'] },
+      { id:'dc', title:'Development Complete', badge:'Code Done', short:'Code merged — ready for QA handoff', owner:'Developer → QA',
+        desc:'Code has been written, reviewed, and merged. The Developer notifies QA and provides test data, environment notes, and edge cases.',
+        flows:['Testing in Progress'] },
+    ]},
+  { id:'qa', label:'QA Testing', icon:'🧪', accent:'#B45309', bg:'#FFFBEB', border:'#FCD34D',
+    agileNote:'QA validates the story against Acceptance Criteria. Any defect raised cycles the story back to Development. No story moves to Regression without QA sign-off.',
+    statuses:[
+      { id:'tip', title:'Testing in Progress', badge:'QA Active', short:'QA engineer running test cases', owner:'QA Engineer',
+        desc:'The QA Engineer is actively executing test cases. Testing covers functional, regression, and UAT. Defects are logged in Jira and the story cycles back to In Progress for fixes.',
+        flows:['QA Complete','In Progress (bug found)'] },
+      { id:'qac', title:'QA Complete', badge:'QA Signed Off', short:'QA passed — ready for Regression queue', owner:'QA Engineer',
+        desc:'The QA Engineer has completed all functional testing and signed off. All test cases have passed. The story is now handed to the Regression team for final validation.',
+        flows:['Ready for Regression Testing'] },
+    ]},
+  { id:'regression', label:'Regression Testing', icon:'🔁', accent:'#C2410C', bg:'#FFF7ED', border:'#FDBA74',
+    agileNote:'Regression ensures new changes have not broken existing functionality. This is a mandatory gate before any story can be accepted for release.',
+    statuses:[
+      { id:'rfrt', title:'Ready for Regression Testing', badge:'Regression Queue', short:'Story queued for regression run', owner:'QA / Regression Team',
+        desc:'The story has passed functional QA and is queued for Regression Testing. The Regression team schedules this story into the next regression cycle.',
+        flows:['Regression Testing'] },
+      { id:'rt', title:'Regression Testing', badge:'Regression Active', short:'Regression suite actively running', owner:'Regression Team',
+        desc:'The Regression team is running the full regression suite to verify new changes have not broken existing functionality. Any failures trigger re-evaluation with the dev team.',
+        flows:['Ready to Accept','In Progress (regression failure)'] },
+      { id:'rta', title:'Ready to Accept', badge:'PO Decision Gate', short:'All testing done — awaiting release decision', owner:'Product Manager / Product Owner',
+        desc:'Regression Testing has passed. The story is fully validated. The Product Owner now makes the final release decision: ship to production or close as Done.',
+        flows:['Accepted (if released)','Done (if no release)'] },
+    ]},
+  { id:'closure', label:'Closure', icon:'🏁', accent:'#15803D', bg:'#F0FDF4', border:'#86EFAC',
+    agileNote:'Closure marks the end of the story lifecycle. Accepted means it shipped to Production. Done means it was completed without a release.',
+    statuses:[
+      { id:'acc', title:'Accepted', badge:'🚀 Shipped!', short:'Deployed to production & verified', owner:'Product Manager / PO',
+        desc:'The User Story has been deployed to Production and formally verified. The Product Owner accepts the story as successfully delivered. Sprint velocity is credited.',
+        flows:['Story Closed ✅'] },
+      { id:'done', title:'Done', badge:'Closed', short:'Completed without production release', owner:'Scrum Master',
+        desc:'The story is completed and closed without a production release — for internal improvements, non-production deliverables, or alternative deployment paths. Definition of Done must still be met.',
+        flows:['Story Closed ✅'] },
+    ]},
+  { id:'special', label:'Special States', icon:'⚡', accent:'#BE123C', bg:'#FFF1F2', border:'#FDA4AF',
+    agileNote:'These states can be triggered at ANY stage. The Scrum Master tracks them in the Impediment Backlog.',
+    statuses:[
+      { id:'blk', title:'Blocked / On Hold', badge:'🚧 Impediment', short:'Progress halted — SM to resolve', owner:'Scrum Master',
+        desc:'Progress has stopped due to an impediment — technical blocker, missing decision, environment issue, or resource unavailability. The SM owns removal and raises it in Standup.',
         flows:['Returns to previous status once resolved'] },
-      { id:'dep', title:'Dependency', short:'Waiting on another team or resource', badge:'Waiting', owner:'Scrum Master + PM',
-        desc:'The story cannot progress because it is waiting on another team, service, or resource outside the current team\'s control. The dependency must be tracked and communicated. Can occur at any stage.',
-        flows:['Returns to active status once cleared'] },
-      { id:'can', title:'Cancelled', short:'Story will not be pursued', badge:'Terminated', owner:'Product Manager',
-        desc:'The story will not be delivered. This can happen at any point — during grooming, refinement, development, or even after QA — if priorities shift, scope changes, or the business no longer needs the outcome.',
-        flows:['No further transitions'] },
-    ]
-  },
+      { id:'dep', title:'Dependency', badge:'🔗 Waiting', short:'Blocked on another team or service', owner:'Scrum Master + PM',
+        desc:'The story depends on a deliverable from another team or external resource. The SM coordinates with stakeholders to unblock. Tracked on the Dependency Board.',
+        flows:['Returns to active status once dependency cleared'] },
+      { id:'can', title:'Cancelled', badge:'❌ Terminated', short:'Story will not be delivered', owner:'Product Manager',
+        desc:'The story will not be delivered. Can occur at any point in the lifecycle if priorities change or the outcome is no longer needed. PM logs the cancellation reason in Jira.',
+        flows:['No further transitions — archived in backlog'] },
+    ]},
 ];
 
 let activeId = null;
 
 function buildPhases() {
   const container = document.getElementById('phases-container');
-  phases.forEach(phase => {
+  phases.forEach((phase, pi) => {
     const sec = document.createElement('section');
     sec.className = 'phase-section';
-    sec.dataset.phase = phase.id;
-
+    sec.style.cssText = `animation:slideUp .5s ease ${pi*.07}s both`;
     sec.innerHTML = `
       <div class="phase-header">
-        <div class="phase-number" style="background:${phase.accentLight};color:${phase.accent}">${phase.num}</div>
-        <span class="phase-title" style="color:${phase.accent}">${phase.label}</span>
-        <div class="phase-line"></div>
+        <div class="phase-badge" style="background:${phase.bg};color:${phase.accent};border-color:${phase.border}">
+          <span class="phase-icon">${phase.icon}</span>${phase.label}
+        </div>
+        <div class="phase-line" style="background:${phase.accent}"></div>
         <span class="phase-count">${phase.statuses.length} status${phase.statuses.length>1?'es':''}</span>
       </div>
-      <div class="status-grid" id="grid-${phase.id}">
-        ${phase.statuses.map(s => buildCard(s, phase)).join('')}
-      </div>
-    `;
+      ${phase.agileNote?`<p style="font-size:13px;color:#7A5C3E;font-weight:600;margin-bottom:14px;background:${phase.bg};border:1.5px solid ${phase.border};border-radius:12px;padding:9px 14px;line-height:1.55">💡 <em>${phase.agileNote}</em></p>`:''}
+      <div class="status-grid">${phase.statuses.map(s=>buildCard(s,phase)).join('')}</div>`;
     container.appendChild(sec);
   });
 }
 
 function buildCard(s, phase) {
-  return `
-    <div class="status-card" id="card-${s.id}" data-id="${s.id}" data-title="${s.title.toLowerCase()}" onclick="showDetail('${s.id}')"
-      style="--card-accent:${phase.accent}">
-      <div class="card-badge" style="background:${phase.accentLight};color:${phase.accent}">
-        <span class="badge-dot" style="background:${phase.accent}"></span>
-        ${s.badge}
-      </div>
-      <div class="card-title">${s.title}</div>
-      <div class="card-desc">${s.short}</div>
-    </div>
-  `;
+  const isSpecial = phase.id==='special';
+  return `<div class="status-card${isSpecial?' card-special':''}" id="card-${s.id}" data-id="${s.id}" data-title="${s.title.toLowerCase()}" onclick="showDetail('${s.id}')" style="border-color:${phase.border}">
+    <div class="card-badge" style="background:${phase.bg};color:${phase.accent};border-color:${phase.border}"><span class="bdot" style="background:${phase.accent}"></span>${s.badge}</div>
+    <div class="card-title">${s.title}</div>
+    <div class="card-desc">${s.short}</div>
+    <div style="position:absolute;top:14px;right:14px;font-size:18px">${phase.icon}</div>
+  </div>`;
+}
+
+function buildFlowTrack() {
+  const track = document.getElementById('flow-track');
+  const mainFlow = [
+    {id:'rfg',label:'Ready for Grooming',color:'#7C3AED',bg:'#F5F0FF',border:'#C4B5FD'},
+    {id:'ing',label:'In Grooming',color:'#7C3AED',bg:'#F5F0FF',border:'#C4B5FD'},
+    {id:'gc',label:'Grooming Complete',color:'#7C3AED',bg:'#F5F0FF',border:'#C4B5FD'},
+    null,
+    {id:'rfr',label:'Ready for Refinement',color:'#0D9488',bg:'#F0FDFA',border:'#5EEAD4'},
+    {id:'rc',label:'Refinement Complete',color:'#0D9488',bg:'#F0FDFA',border:'#5EEAD4'},
+    null,
+    {id:'td',label:'To Do',color:'#1D6FC4',bg:'#EFF6FF',border:'#93C5FD'},
+    {id:'ip',label:'In Progress',color:'#1D6FC4',bg:'#EFF6FF',border:'#93C5FD'},
+    {id:'dc',label:'Dev Complete',color:'#1D6FC4',bg:'#EFF6FF',border:'#93C5FD'},
+    null,
+    {id:'tip',label:'Testing in Progress',color:'#B45309',bg:'#FFFBEB',border:'#FCD34D'},
+    {id:'qac',label:'QA Complete',color:'#B45309',bg:'#FFFBEB',border:'#FCD34D'},
+    null,
+    {id:'rfrt',label:'Ready for Regression',color:'#C2410C',bg:'#FFF7ED',border:'#FDBA74'},
+    {id:'rt',label:'Regression Testing',color:'#C2410C',bg:'#FFF7ED',border:'#FDBA74'},
+    {id:'rta',label:'Ready to Accept',color:'#C2410C',bg:'#FFF7ED',border:'#FDBA74'},
+  ];
+  mainFlow.forEach(node => {
+    if (!node) { const a=document.createElement('span');a.className='flow-arrow';a.textContent='→';track.appendChild(a);return; }
+    const btn=document.createElement('button');
+    btn.className='flow-node'; btn.textContent=node.label;
+    btn.style.cssText=`background:${node.bg};color:${node.color};border-color:${node.border}`;
+    btn.onclick=()=>showDetail(node.id); track.appendChild(btn);
+  });
+  const fork=document.createElement('div');
+  fork.style.cssText='display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px;width:100%';
+  fork.innerHTML=`<span class="flow-arrow">→</span><div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:700;color:#15803D;text-transform:uppercase;letter-spacing:.05em">If release →</span><button class="flow-node" onclick="showDetail('acc')" style="background:#F0FDF4;color:#15803D;border-color:#86EFAC">🚀 Accepted</button></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.05em">If no release →</span><button class="flow-node" onclick="showDetail('done')" style="background:#F9FAFB;color:#374151;border-color:#D1D5DB">✓ Done</button></div></div>`;
+  track.appendChild(fork);
 }
 
 function showDetail(id) {
-  const allStatuses = phases.flatMap(p => p.statuses.map(s => ({...s, phase: p})));
-  const s = allStatuses.find(x => x.id === id);
-  if (!s) return;
-
-  // Toggle
-  if (activeId === id) {
-    activeId = null;
-    document.querySelectorAll('.status-card').forEach(c => c.classList.remove('active'));
-    document.getElementById('detail-content').style.display = 'none';
-    document.getElementById('detail-empty').style.display = 'flex';
+  const allS = phases.flatMap(p=>p.statuses.map(s=>({...s,phase:p})));
+  const s = allS.find(x=>x.id===id); if (!s) return;
+  const cardEl = document.getElementById('card-'+id);
+  if (activeId===id) {
+    activeId=null;
+    document.querySelectorAll('.status-card').forEach(c=>{ c.classList.remove('active'); const ph=phases.find(p=>p.statuses.some(st=>st.id===c.dataset.id)); if(ph) c.style.borderColor=ph.border; });
+    document.getElementById('detail-body').style.display='none';
+    document.getElementById('detail-empty').style.display='flex';
     return;
   }
-
-  activeId = id;
-  document.querySelectorAll('.status-card').forEach(c => {
-    c.classList.remove('active');
-    c.style.removeProperty('border-color');
-  });
-  const card = document.getElementById('card-'+id);
-  if (card) {
-    card.classList.add('active');
-    card.style.borderColor = s.phase.accent;
-  }
-
-  const panel = document.getElementById('detail-panel');
-  panel.style.setProperty('--panel-accent', s.phase.accent);
-  panel.style.borderColor = s.phase.accent.replace(')', ',0.35)').replace('rgb', 'rgba');
-  panel.querySelector('::before');
-  panel.style.cssText += `border-color: rgba(255,255,255,0.1);`;
-
-  document.getElementById('detail-empty').style.display = 'none';
-  const content = document.getElementById('detail-content');
-  content.style.display = 'block';
-  content.innerHTML = `
-    <div class="detail-content">
-      <div class="detail-header">
-        <div class="detail-title" style="color:${s.phase.accent}">${s.title}</div>
-        <div class="detail-owner">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          ${s.owner}
-        </div>
-      </div>
-      <p class="detail-desc">${s.desc}</p>
-      <div class="flows-label">Flows to</div>
-      <div class="flows-list">
-        ${s.flows.map(f => `
-          <span class="flow-chip">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            ${f}
-          </span>`).join('')}
-      </div>
-    </div>
-  `;
-
-  panel.style.borderColor = s.phase.accent;
-  panel.querySelector('.detail-panel::before') && (panel.style.setProperty('--before-bg', s.phase.accent));
-
-  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  activeId=id;
+  document.querySelectorAll('.status-card').forEach(c=>{ c.classList.remove('active'); const ph=phases.find(p=>p.statuses.some(st=>st.id===c.dataset.id)); if(ph) c.style.borderColor=ph.border; });
+  if (cardEl) { cardEl.classList.add('active'); cardEl.style.borderColor=s.phase.accent; }
+  document.getElementById('detail-bar').style.background=s.phase.accent;
+  document.getElementById('detail-panel').style.borderColor=s.phase.border;
+  document.getElementById('detail-empty').style.display='none';
+  const body=document.getElementById('detail-body'); body.style.display='block';
+  body.innerHTML=`<div style="animation:slideUp .25s ease both"><div class="detail-header-row"><div class="detail-title" style="color:${s.phase.accent}">${s.phase.icon} ${s.title}</div><div class="detail-owner">👤 ${s.owner}</div></div><div style="display:inline-flex;align-items:center;gap:6px;background:${s.phase.bg};border:1.5px solid ${s.phase.border};border-radius:30px;padding:4px 14px;font-family:'Fredoka One',cursive;font-size:12px;color:${s.phase.accent};margin-bottom:16px">${s.badge}</div><p class="detail-desc">${s.desc}</p><div class="flows-label">➜ Flows to next</div><div class="flows-list">${s.flows.map(f=>`<span class="flow-chip">→ ${f}</span>`).join('')}</div></div>`;
+  document.getElementById('detail-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-function filterStatuses(query) {
-  const q = query.toLowerCase().trim();
-  document.querySelectorAll('.status-card').forEach(card => {
-    const title = card.dataset.title || '';
-    card.classList.toggle('hidden', q.length > 0 && !title.includes(q));
+function filterStatuses(q) {
+  q=q.toLowerCase().trim();
+  document.querySelectorAll('.status-card').forEach(c=>{
+    c.classList.toggle('hidden', q.length>0 && !c.dataset.title.includes(q));
   });
 }
 
-// Floating pills background
-function createPills() {
-  const container = document.getElementById('float-pills');
-  const labels = [
-    { text: 'In progress', bg: 'rgba(55,138,221,0.18)', color: '#85B7EB' },
-    { text: 'Ready to accept', bg: 'rgba(186,117,23,0.18)', color: '#EF9F27' },
-    { text: 'Grooming complete', bg: 'rgba(127,119,221,0.18)', color: '#AFA9EC' },
-    { text: 'Blocked', bg: 'rgba(226,75,74,0.18)', color: '#F09595' },
-    { text: 'Accepted', bg: 'rgba(99,153,34,0.18)', color: '#97C459' },
-    { text: 'Dependency', bg: 'rgba(216,90,48,0.18)', color: '#F0997B' },
-    { text: 'To do', bg: 'rgba(55,138,221,0.18)', color: '#85B7EB' },
-    { text: 'Done', bg: 'rgba(136,135,128,0.18)', color: '#B4B2A9' },
-    { text: 'In grooming', bg: 'rgba(127,119,221,0.18)', color: '#AFA9EC' },
-    { text: 'Testing in progress', bg: 'rgba(186,117,23,0.18)', color: '#EF9F27' },
-    { text: 'Refinement complete', bg: 'rgba(29,158,117,0.18)', color: '#5DCAA5' },
-    { text: 'Cancelled', bg: 'rgba(136,135,128,0.18)', color: '#B4B2A9' },
-  ];
+// ═══════════════════════════════════
+// CONFIDENCE VOTE
+// ═══════════════════════════════════
+let votes = [];
+let selectedVote = null;
 
-  function spawnPill() {
-    const l = labels[Math.floor(Math.random() * labels.length)];
-    const pill = document.createElement('div');
-    pill.className = 'float-pill';
-    pill.textContent = l.text;
-    pill.style.cssText = `
-      background: ${l.bg};
-      border: 0.5px solid ${l.color}55;
-      color: ${l.color};
-      left: ${Math.random() * 90}%;
-      bottom: ${Math.random() * 20}%;
-      animation-duration: ${10 + Math.random() * 14}s;
-      animation-delay: ${Math.random() * -20}s;
-    `;
-    container.appendChild(pill);
-    pill.addEventListener('animationiteration', () => {
-      pill.style.left = Math.random() * 90 + '%';
-    });
-  }
-
-  for (let i = 0; i < 18; i++) spawnPill();
+function selectVote(v) {
+  selectedVote = v;
+  document.querySelectorAll('.vote-btn').forEach(btn=>{
+    btn.classList.toggle('selected', parseInt(btn.dataset.v)===v);
+  });
+  const nameVal = document.getElementById('voter-name').value.trim();
+  document.getElementById('btn-cast').disabled = !nameVal;
 }
 
+document.getElementById('voter-name').addEventListener('input', function() {
+  document.getElementById('btn-cast').disabled = !(this.value.trim() && selectedVote);
+});
+
+function castVote() {
+  const name = document.getElementById('voter-name').value.trim();
+  if (!name || !selectedVote) return;
+  // prevent duplicate names
+  if (votes.some(v=>v.name.toLowerCase()===name.toLowerCase())) {
+    document.getElementById('voter-name').style.borderColor='#E24B4A';
+    document.getElementById('voter-name').placeholder='Name already voted!';
+    setTimeout(()=>{ document.getElementById('voter-name').style.borderColor=''; document.getElementById('voter-name').placeholder='e.g. Charan, Priya, Rahul…'; },1800);
+    return;
+  }
+  votes.push({name, score: selectedVote});
+  renderVoters();
+  // reset form
+  document.getElementById('voter-name').value = '';
+  selectedVote = null;
+  document.querySelectorAll('.vote-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('btn-cast').disabled = true;
+  document.getElementById('cv-result').style.display = 'none';
+}
+
+function renderVoters() {
+  const wrap = document.getElementById('voters-list-wrap');
+  document.getElementById('vote-count').textContent = votes.length;
+  document.getElementById('btn-calc').disabled = votes.length === 0;
+  if (votes.length===0) { wrap.innerHTML='<div class="voters-empty">No votes yet — add team members above to get started! 👆</div>'; return; }
+  wrap.innerHTML=`<div class="voters-list">${votes.map((v,i)=>`
+    <div class="voter-row" id="vrow-${i}">
+      <div class="voter-score-badge ${scoreClass(v.score)}">${v.score}</div>
+      <div class="voter-name">${escHtml(v.name)}</div>
+      <div style="font-size:12px;font-weight:600;color:#9B7B58">${scoreLabel(v.score)}</div>
+      <button class="voter-remove" onclick="removeVote(${i})" title="Remove vote">✕</button>
+    </div>`).join('')}</div>`;
+}
+
+function removeVote(i) {
+  votes.splice(i,1);
+  renderVoters();
+  document.getElementById('cv-result').style.display='none';
+}
+
+function resetVotes() {
+  votes=[];
+  selectedVote=null;
+  document.getElementById('voter-name').value='';
+  document.querySelectorAll('.vote-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('btn-cast').disabled=true;
+  renderVoters();
+  document.getElementById('cv-result').style.display='none';
+}
+
+function calculateResult() {
+  if (votes.length===0) return;
+  const total = votes.reduce((s,v)=>s+v.score,0);
+  const avg = Math.round(total / votes.length); // no decimals
+  const result = document.getElementById('cv-result');
+  result.style.display='block';
+  result.className='cv-result';
+
+  let cls, label, desc, emoji;
+  if (avg<=2) {
+    cls='result-red'; label='Low Confidence 😟'; desc='The team lacks confidence. Revisit the story, address blockers, and re-groom before proceeding.'; emoji='🔴';
+  } else if (avg===3) {
+    cls='result-amber'; label='Moderate Confidence 😐'; desc='The team has some concerns. Discuss blockers in the next standup and clarify open questions.'; emoji='🟡';
+  } else {
+    cls='result-green'; label='High Confidence 🤩'; desc='The team is confident and ready to deliver. Great job on alignment — let\'s ship it!'; emoji='🟢';
+  }
+
+  result.classList.add(cls);
+  document.getElementById('result-label').textContent=emoji+' Team Confidence Score';
+  document.getElementById('result-score').textContent=avg;
+  document.getElementById('result-desc').textContent=label;
+  document.getElementById('result-meta').textContent=`${votes.length} vote${votes.length>1?'s':''} cast · Average = ${avg} / 5`;
+  setTimeout(()=>{ document.getElementById('result-bar').style.width=((avg/5)*100)+'%'; },100);
+  result.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function scoreClass(s) { return s<=2?'score-red':s===3?'score-amber':'score-green'; }
+function scoreLabel(s) {
+  return ['','😟 Not confident','😕 Low confidence','😐 Moderate','😊 Confident','🤩 Super confident!'][s];
+}
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// INIT
 buildPhases();
-createPills();
+buildFlowTrack();
 </script>
 </body>
 </html>
